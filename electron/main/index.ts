@@ -38,7 +38,11 @@ async function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
     },
+    width: 960,
+    height: 640,
+    resizable: false,
   })
+  win.webContents.openDevTools();
 
   if (app.isPackaged) {
     win.loadFile(indexHtml)

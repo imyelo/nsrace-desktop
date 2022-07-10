@@ -1,54 +1,39 @@
-import { useState } from 'react'
-import electron from '/electron.png'
-import react from '/react.svg'
-import vite from '/vite.svg'
-import styles from 'styles/app.module.scss'
-import { Layout } from '@douyinfe/semi-ui'
+import React from 'react'
+import { TextArea, Divider, Button } from '@douyinfe/semi-ui'
+import styled from 'styled-components'
+
+const Root = styled.div`
+  padding: 12px;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 12px;
+  h4 {
+    margin-bottom: 12px;
+  }
+  .input {
+    margin-bottom: 12px;
+  }
+`
 
 const App: React.FC = () => {
-  const [count, setCount] = useState(0)
-
   return (
-    <div className={styles.app}>
-      <header className={styles.appHeader}>
-        <div className={styles.logos}>
-          <div className={styles.imgBox}>
-            <img src={electron} style={{ height: '24vw' }} className={styles.appLogo} alt="electron" />
-          </div>
-          <div className={styles.imgBox}>
-            <img src={vite} style={{ height: '19vw' }} alt="vite" />
-          </div>
-          <div className={styles.imgBox}>
-            <img src={react} style={{ maxWidth: '100%' }} className={styles.appLogo} alt="logo" />
-          </div>
-        </div>
-        <p>Hello Electron + Vite + React!</p>
-        <p>
-          <button onClick={() => setCount(count => count + 1)}>count is: {count}</button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <div>
-          <a className={styles.appLink} href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className={styles.appLink}
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-          <div className={styles.staticPublic}>
-            Place static files into the <code>/public</code> folder
-            <img style={{ width: 77 }} src="./node.png" />
-          </div>
-        </div>
-      </header>
-    </div>
+    <Root>
+      <div>
+        <h4>异常请求地址</h4>
+        <TextArea rows={10} showClear className="input" />
+        <Button theme="solid" type="primary" block>
+          探测
+        </Button>
+        <Divider margin="12px" />
+        <h4>日志</h4>
+        <TextArea rows={10} disabled />
+      </div>
+      <div>
+        <h4>结果</h4>
+        <TextArea rows={10} disabled />
+      </div>
+    </Root>
   )
 }
 
