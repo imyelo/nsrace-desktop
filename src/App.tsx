@@ -1,39 +1,134 @@
 import React from 'react'
-import { TextArea, Divider, Button } from '@douyinfe/semi-ui'
+import { Button, ButtonGroup, Card, Tag, TextArea, Tree, Toast } from '@douyinfe/semi-ui'
+import { IconCopy } from '@douyinfe/semi-icons'
 import styled from 'styled-components'
+import { useRequest } from 'ahooks'
+import { INSRaceRecord } from 'nsrace'
+import { clipboard } from 'electron'
+import { submit, ISubmitResult } from './services/nsrace'
 
 const Root = styled.div`
+  box-sizing: border-box;
   padding: 12px;
   height: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 3fr 2fr;
   column-gap: 12px;
-  h4 {
-    margin-bottom: 12px;
-  }
-  .input {
-    margin-bottom: 12px;
+  .fullcard {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    .semi-card-body {
+      flex: 1;
+      overflow-y: auto;
+    }
   }
 `
 
+const DEFAULT_INPUT =
+  import.meta.env.MODE === 'development'
+    ? `www.amazon.com
+https://m.media-amazon.com/images/S/sash/KFPk-9IF4FqAqY-.woff2
+https://d2beun48pmgqbs.cloudfront.net/katal.components.7e3b602e6b3ddf9ff4a7.css
+https://d2beun48pmgqbs.cloudfront.net/metrics.ed495b3400bcf948e9a5.js
+https://d2beun48pmgqbs.cloudfront.net/katal.components.4b6d401a4fb8101d4dec.min.js
+https://d292m3pjb343i7.cloudfront.net/i18n/en-US.json
+https://d292m3pjb343i7.cloudfront.net/i18n/en-US.json
+https://m.media-amazon.com/images/S/sash/mzVbGSgvdBfRLX9.woff
+https://m.media-amazon.com/images/S/sash/kfKKBuoqcD$AUKL.woff
+`
+    : ''
+const PLACEHOLDER = `www.amazon.com
+https://m.media-amazon.com/images/S/sash/KFPk-9IF4FqAqY-.woff2`
+
 const App: React.FC = () => {
+  const [input, setInput] = React.useState(DEFAULT_INPUT)
+  const handleInput = React.useCallback((value: string) => setInput(value), [setInput])
+  const submitter = useRequest(submit, {
+    manual: true,
+  })
+  const handleSubmit = React.useCallback(async () => {
+    submitter.run(input.split('\n').filter(Boolean))
+  }, [input])
   return (
     <Root>
-      <div>
-        <h4>异常请求地址</h4>
-        <TextArea rows={10} showClear className="input" />
-        <Button theme="solid" type="primary" block>
-          探测
-        </Button>
-        <Divider margin="12px" />
-        <h4>日志</h4>
-        <TextArea rows={10} disabled />
-      </div>
-      <div>
-        <h4>结果</h4>
-        <TextArea rows={10} disabled />
-      </div>
+      <Card
+        className="fullcard"
+        title="查询地址"
+        footer={
+          <Button theme="solid" type="primary" block onClick={handleSubmit} loading={submitter.loading}>
+            探测
+          </Button>
+        }
+      >
+        <TextArea autosize showClear className="input" placeholder={PLACEHOLDER} value={input} onChange={handleInput} />
+      </Card>
+      <Card title="查询结果" loading={submitter.loading} className="fullcard">
+        <Result value={submitter.data} />
+      </Card>
     </Root>
+  )
+}
+
+const Result: React.FC<{ value?: ISubmitResult }> = ({ value }) => {
+  const data = React.useMemo(() => {
+    return (
+      value?.map(({ host, response }) => ({
+        key: host,
+        label: host,
+        children: response?.times?.map(time => ({
+          key: `${host}-${time?.ip}`,
+          label: <Record value={time} host={host} />,
+        })),
+      })) || []
+    )
+  }, [value])
+  return (
+    <>
+      <Tree treeData={data} expandAll />
+    </>
+  )
+}
+
+const RecordStyle = styled.div`
+  display: flex;
+  justify-content: space-between;
+  .information {
+    .ip {
+      margin-right: 0.5em;
+    }
+  }
+  .operations {
+    opacity: 0;
+    transition: all 200ms ease;
+  }
+  &:hover {
+    .operations {
+      opacity: 1;
+    }
+  }
+`
+const Record: React.FC<{ value: INSRaceRecord; host: string }> = ({ value, host }) => {
+  const duration = React.useMemo(() => {
+    if (value.duration === Infinity) {
+      return 'timeout'
+    }
+    return `${value.duration.toFixed(0)}ms`
+  }, [value])
+  const handleCopy = React.useCallback(() => {
+    clipboard.writeText(`${value.ip} ${host}`)
+    Toast.success('已复制 Hosts 规则')
+  }, [value, host])
+  return (
+    <RecordStyle>
+      <div className="information">
+        <span className="ip">{value.ip}</span>
+        <Tag color={value.duration === Infinity ? 'orange' : 'green'}>{duration}</Tag>
+      </div>
+      <ButtonGroup size="small" theme="borderless" className="operations">
+        <Button icon={<IconCopy />} onClick={handleCopy} />
+      </ButtonGroup>
+    </RecordStyle>
   )
 }
 

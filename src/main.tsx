@@ -5,6 +5,8 @@ import App from './App'
 import 'reset.css'
 import 'styles/index.css'
 
+document.body.setAttribute('theme-mode', 'dark');
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <App />
