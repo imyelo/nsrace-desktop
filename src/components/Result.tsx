@@ -1,9 +1,10 @@
 import React from 'react'
 import { Button, ButtonGroup, Tag, Tree, Toast } from '@douyinfe/semi-ui'
-import { IconCopy } from '@douyinfe/semi-icons'
+import { IconCopy, IconSave } from '@douyinfe/semi-icons'
 import styled from 'styled-components'
 import { INSRaceRecord } from 'nsrace'
 import { clipboard } from 'electron'
+import hostile from 'hostile'
 import { ISubmitResult } from '../services/nsrace'
 
 export const Result: React.FC<{ value?: ISubmitResult }> = ({ value }) => {
@@ -55,6 +56,16 @@ const Record: React.FC<{ value: INSRaceRecord; host: string }> = ({ value, host 
     clipboard.writeText(`${value.ip} ${host}`)
     Toast.success('已复制 Hosts 规则')
   }, [value, host])
+  const handleSave = React.useCallback(() => {
+    const [error] = updateHost(host, value.ip)
+    if (!error) {
+      return Toast.success('已写入 Hosts 文件')
+    }
+    if (error.message.includes('EACCES')) {
+      return Toast.error('写入失败，请使用管理员权限运行本程序')
+    }
+    Toast.error('写入 Hosts 文件失败')
+  }, [value, host])
   return (
     <RecordStyle>
       <div className="information">
@@ -63,7 +74,27 @@ const Record: React.FC<{ value: INSRaceRecord; host: string }> = ({ value, host 
       </div>
       <ButtonGroup size="small" theme="borderless" className="operations">
         <Button icon={<IconCopy />} onClick={handleCopy} />
+        <Button icon={<IconSave />} onClick={handleSave} />
       </ButtonGroup>
     </RecordStyle>
   )
+}
+
+const updateHost = (host: string, ip: string): [Error?] => {
+  try {
+    const lines = hostile.get(false)
+    lines.map((line) => {
+      const current = {
+        ip: line[0],
+        host: line[1],
+      }
+      if (current.host === host) {
+        hostile.remove(current.ip, current.host)
+      }
+    })
+    hostile.set(ip, host)
+    return []
+  } catch (error) {
+    return [error as Error]
+  }
 }
