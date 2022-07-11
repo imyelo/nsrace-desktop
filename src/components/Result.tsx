@@ -1,6 +1,6 @@
 import React from 'react'
-import { Button, ButtonGroup, Tag, Tree, Toast } from '@douyinfe/semi-ui'
-import { IconCopy, IconSave } from '@douyinfe/semi-icons'
+import { Button, ButtonGroup, Tag, Tree, Toast, Tooltip } from '@douyinfe/semi-ui'
+import { IconCopy, IconSave, IconUndo } from '@douyinfe/semi-icons'
 import styled from 'styled-components'
 import { INSRaceRecord } from 'nsrace'
 import { clipboard } from 'electron'
@@ -12,10 +12,10 @@ export const Result: React.FC<{ value?: ISubmitResult }> = ({ value }) => {
     return (
       value?.map(({ host, response }) => ({
         key: host,
-        label: host,
+        label: <HostRecord host={host} />,
         children: response?.times?.map(time => ({
           key: `${host}-${time?.ip}`,
-          label: <Record value={time} host={host} />,
+          label: <IPRecord value={time} host={host} />,
         })),
       })) || []
     )
@@ -30,6 +30,7 @@ export const Result: React.FC<{ value?: ISubmitResult }> = ({ value }) => {
 const RecordStyle = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   .information {
     .ip {
       margin-right: 0.5em;
@@ -45,7 +46,36 @@ const RecordStyle = styled.div`
     }
   }
 `
-const Record: React.FC<{ value: INSRaceRecord; host: string }> = ({ value, host }) => {
+
+const HostRecord: React.FC<{ host: string }> = ({ host }) => {
+  const handleClear = React.useCallback(() => {
+    const [error, count] = removeHost(host)
+    if (!error && !count) {
+      return Toast.info('没有该域名相关的 Hosts 记录')
+    }
+    if (!error) {
+      return Toast.success('已重置该域名的 Hosts 记录')
+    }
+    if (error.message.includes('EACCES')) {
+      return Toast.error('重置失败，请使用管理员权限运行本程序')
+    }
+    Toast.error('更新 Hosts 文件失败')
+  }, [host])
+  return (
+    <RecordStyle>
+      <div className="information">
+        <span>{host}</span>
+      </div>
+      <ButtonGroup className="operations">
+        <Tooltip position="topLeft" content="重置 Hosts">
+          <Button size="small" theme="borderless" icon={<IconUndo />} onClick={handleClear} />
+        </Tooltip>
+      </ButtonGroup>
+    </RecordStyle>
+  )
+}
+
+const IPRecord: React.FC<{ value: INSRaceRecord; host: string }> = ({ value, host }) => {
   const duration = React.useMemo(() => {
     if (value.duration === Infinity) {
       return 'timeout'
@@ -72,26 +102,39 @@ const Record: React.FC<{ value: INSRaceRecord; host: string }> = ({ value, host 
         <span className="ip">{value.ip}</span>
         <Tag color={value.duration === Infinity ? 'orange' : 'green'}>{duration}</Tag>
       </div>
-      <ButtonGroup size="small" theme="borderless" className="operations">
-        <Button icon={<IconCopy />} onClick={handleCopy} />
-        <Button icon={<IconSave />} onClick={handleSave} />
+      <ButtonGroup className="operations">
+        <Tooltip position="topLeft" content="复制 Hosts 规则">
+          <Button size="small" theme="borderless" aria-label="111" icon={<IconCopy />} onClick={handleCopy} />
+        </Tooltip>
+        <Tooltip position="topLeft" content="直接写入 Hosts">
+          <Button size="small" theme="borderless" icon={<IconSave />} onClick={handleSave} />
+        </Tooltip>
       </ButtonGroup>
     </RecordStyle>
   )
 }
 
-const updateHost = (host: string, ip: string): [Error?] => {
+const removeHost = (host: string): [Error?, number?] => {
   try {
     const lines = hostile.get(false)
-    lines.map((line) => {
-      const current = {
+    const matchedLines = lines
+      .map(line => ({
         ip: line[0],
         host: line[1],
-      }
-      if (current.host === host) {
-        hostile.remove(current.ip, current.host)
-      }
+      }))
+      .filter(line => line.host === host)
+    matchedLines.forEach(line => {
+      hostile.remove(line.ip, line.host)
     })
+    return [void 0, matchedLines.length]
+  } catch (error) {
+    return [error as Error]
+  }
+}
+
+const updateHost = (host: string, ip: string): [Error?] => {
+  try {
+    removeHost(host)
     hostile.set(ip, host)
     return []
   } catch (error) {
