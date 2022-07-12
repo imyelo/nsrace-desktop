@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { INSRaceRecord } from 'nsrace'
 import { clipboard } from 'electron'
 import hostile from 'hostile'
-import { ISubmitResult } from '../services/nsrace'
+import { ISubmitResult } from '../../services/nsrace'
 
 export const Result: React.FC<{ value?: ISubmitResult }> = ({ value }) => {
   const data = React.useMemo(() => {
@@ -78,7 +78,7 @@ const HostRecord: React.FC<{ host: string }> = ({ host }) => {
 const IPRecord: React.FC<{ value: INSRaceRecord; host: string }> = ({ value, host }) => {
   const duration = React.useMemo(() => {
     if (value.duration === Infinity) {
-      return 'timeout'
+      return 'lost'
     }
     return `${value.duration.toFixed(0)}ms`
   }, [value])

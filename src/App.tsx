@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { useRequest } from 'ahooks'
 import { submit } from './services/nsrace'
 import { Result } from './components/Result'
+import { Presets } from './components/Presets'
 
 const Root = styled.div`
   box-sizing: border-box;
@@ -53,6 +54,7 @@ const App: React.FC = () => {
       <Card
         className="fullcard"
         title="查询地址"
+        headerExtraContent={<Presets onSelect={handleInput} />}
         footer={
           <Button theme="solid" type="primary" block onClick={handleSubmit} loading={submitter.loading}>
             探测
