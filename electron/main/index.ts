@@ -41,14 +41,14 @@ async function createWindow() {
     width: 960,
     height: 640,
     resizable: false,
+    autoHideMenuBar: true,
   })
-  // win.webContents.openDevTools();
 
   if (app.isPackaged) {
     win.loadFile(indexHtml)
   } else {
     win.loadURL(url)
-    // win.webContents.openDevTools()
+    win.webContents.openDevTools()
   }
 
   // Test actively push message to the Electron-Renderer
