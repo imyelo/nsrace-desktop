@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, ButtonGroup, Tag, Tree, Toast, Tooltip } from '@douyinfe/semi-ui'
+import { Button, ButtonGroup, Tag, Tree, Toast, Tooltip, Typography } from '@douyinfe/semi-ui'
 import { IconCopy, IconSave, IconUndo } from '@douyinfe/semi-icons'
 import styled from 'styled-components'
 import { INSRaceRecord } from 'nsrace'
@@ -13,16 +13,20 @@ export const Result: React.FC<{ value?: ISubmitResult }> = ({ value }) => {
       value?.map(({ host, response }) => ({
         key: host,
         label: <HostRecord host={host} />,
-        children: response?.times?.map(time => ({
+        children: response?.times?.length && response?.times?.map(time => ({
           key: `${host}-${time?.ip}`,
           label: <IPRecord value={time} host={host} />,
-        })),
+        })) || [{
+          key: `${host}-empty`,
+          label: <Typography.Text disabled>查询失败</Typography.Text>
+        }],
       })) || []
     )
   }, [value])
+
   return (
     <>
-      <Tree treeData={data} expandAll />
+      <Tree treeData={data} expandAll value={void 0} />
     </>
   )
 }
