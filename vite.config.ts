@@ -2,6 +2,7 @@ import { rmSync } from 'fs'
 import { join } from 'path'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import esmodule from 'vite-plugin-esmodule'
 import electron from 'vite-plugin-electron'
 import pkg from './package.json'
 
@@ -17,6 +18,9 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    esmodule([
+      'nsrace'
+    ]),
     electron({
       main: {
         entry: 'electron/main/index.ts',

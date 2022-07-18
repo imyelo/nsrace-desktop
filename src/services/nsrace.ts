@@ -1,8 +1,11 @@
 import { URL } from 'url'
-import { run, INSRaceResult } from 'nsrace'
+import { race, IRaceResult } from 'nsrace'
 import _ from 'lodash'
 
-export type ISubmitResult = { host: string; response: INSRaceResult }[]
+export type ISubmitResult = { host: string; response: IRaceResult }[]
+
+const DEFAULT_PING_TIMEOUT = 1000
+const DEFAULT_FETCH_TIMEOUT = 1000
 
 const getHostnameFromURI = (uri: string) => {
   try {
@@ -26,8 +29,10 @@ export const submit = async (uris: string[]) => {
   for (let task of tasks) {
     result.push({
       host: task.host,
-      response: await run({
+      response: await race({
         uri: task.uri,
+        pingTimeout: DEFAULT_PING_TIMEOUT,
+        fetchTimeout: DEFAULT_FETCH_TIMEOUT,
       }),
     })
   }

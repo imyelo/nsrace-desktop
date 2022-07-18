@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, ButtonGroup, Tag, Tree, Toast, Tooltip, Typography } from '@douyinfe/semi-ui'
 import { IconCopy, IconSave, IconUndo } from '@douyinfe/semi-icons'
 import styled from 'styled-components'
-import { INSRaceRecord } from 'nsrace'
+import { ITimeRecord } from 'nsrace'
 import { clipboard } from 'electron'
 import hostile from 'hostile'
 import { ISubmitResult } from '../../services/nsrace'
@@ -36,7 +36,7 @@ const RecordStyle = styled.div`
   justify-content: space-between;
   align-items: center;
   .information {
-    .ip {
+    & > * {
       margin-right: 0.5em;
     }
   }
@@ -79,7 +79,7 @@ const HostRecord: React.FC<{ host: string }> = ({ host }) => {
   )
 }
 
-const IPRecord: React.FC<{ value: INSRaceRecord; host: string }> = ({ value, host }) => {
+const IPRecord: React.FC<{ value: ITimeRecord; host: string }> = ({ value, host }) => {
   const duration = React.useMemo(() => {
     if (value.duration === Infinity) {
       return 'lost'
