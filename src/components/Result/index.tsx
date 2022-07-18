@@ -111,10 +111,10 @@ const IPRecord: React.FC<{ value: ITimeRecord; host: string }> = ({ value, host 
         {isDoH && <Tag color="teal"><IconSafe /> DoH</Tag>}
       </div>
       <ButtonGroup className="operations">
-        <Tooltip position="topLeft" content="复制 Hosts 规则">
+        <Tooltip position="topLeft" content="复制 Hosts">
           <Button size="small" theme="borderless" aria-label="111" icon={<IconCopy />} onClick={handleCopy} />
         </Tooltip>
-        <Tooltip position="topLeft" content="直接写入 Hosts">
+        <Tooltip position="topLeft" content="写入 Hosts">
           <Button size="small" theme="borderless" icon={<IconSave />} onClick={handleSave} />
         </Tooltip>
       </ButtonGroup>
