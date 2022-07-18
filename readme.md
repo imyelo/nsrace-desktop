@@ -7,6 +7,9 @@
 ## Installation
 https://github.com/imyelo/nsrace-app/releases
 
+## Builtins DNS Servers List
+Check https://github.com/imyelo/nsrace/blob/master/src/core/config.ts#L7-L31
+
 ## Based on
 - [nsrace](https://github.com/imyelo/nsrace)
 - [electron-vite-react](https://github.com/electron-vite/electron-vite-react)
