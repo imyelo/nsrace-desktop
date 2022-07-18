@@ -28,11 +28,9 @@ const DEFAULT_INPUT =
   import.meta.env.MODE === 'development'
     ? `www.amazon.com
 https://m.media-amazon.com/images/S/sash/KFPk-9IF4FqAqY-.woff2
-https://d2beun48pmgqbs.cloudfront.net/katal.components.7e3b602e6b3ddf9ff4a7.css
-https://d2beun48pmgqbs.cloudfront.net/metrics.ed495b3400bcf948e9a5.js
-https://d2beun48pmgqbs.cloudfront.net/katal.components.4b6d401a4fb8101d4dec.min.js
-https://d292m3pjb343i7.cloudfront.net/i18n/en-US.json
-https://d292m3pjb343i7.cloudfront.net/i18n/en-US.json
+https://d3216uwaav9lg7.cloudfront.net/assets-Sell.css
+https://d2beun48pmgqbs.cloudfront.net/katal.flo.components.7ab5eca7e6ecca63134f.css
+https://d1t40axu4ik42k.cloudfront.net/cathodeBoomerang.d11474def2665bc03c00.min.js
 https://m.media-amazon.com/images/S/sash/mzVbGSgvdBfRLX9.woff
 https://m.media-amazon.com/images/S/sash/kfKKBuoqcD$AUKL.woff
 `

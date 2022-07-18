@@ -15,8 +15,9 @@ export const PRESETS: IPreset[] = [
     ),
     value: [
       'https://m.media-amazon.com/images/S/sash/KFPk-9IF4FqAqY-.woff2',
-      'https://d292m3pjb343i7.cloudfront.net/i18n/en-US.json',
-      'https://d2beun48pmgqbs.cloudfront.net/metrics.ed495b3400bcf948e9a5.js',
+      'https://d3216uwaav9lg7.cloudfront.net/assets-Sell.css',
+      'https://d2beun48pmgqbs.cloudfront.net/katal.flo.components.7ab5eca7e6ecca63134f.css',
+      'https://d1t40axu4ik42k.cloudfront.net/cathodeBoomerang.d11474def2665bc03c00.min.js',
     ].join('\n'),
   },
   {
