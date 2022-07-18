@@ -51,7 +51,7 @@ const App: React.FC = () => {
     <Root>
       <Card
         className="fullcard"
-        title="查询地址"
+        title="目标地址"
         headerExtraContent={<Presets onSelect={handleInput} />}
         footer={
           <Button theme="solid" type="primary" block onClick={handleSubmit} loading={submitter.loading}>
@@ -61,7 +61,7 @@ const App: React.FC = () => {
       >
         <TextArea autosize showClear className="input" placeholder={PLACEHOLDER} value={input} onChange={handleInput} />
       </Card>
-      <Card title="查询结果" loading={submitter.loading} className="fullcard">
+      <Card title="DNS 解析结果" loading={submitter.loading} className="fullcard">
         <Result value={submitter.data} />
       </Card>
     </Root>
