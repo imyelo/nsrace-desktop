@@ -11,7 +11,7 @@ const Root = styled.div`
   padding: 12px;
   height: 100%;
   display: grid;
-  grid-template-columns: 3fr 2fr;
+  grid-template-columns: 4fr 3fr;
   column-gap: 12px;
   .fullcard {
     display: flex;

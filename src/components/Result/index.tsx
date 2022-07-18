@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, ButtonGroup, Tag, Tree, Toast, Tooltip, Typography } from '@douyinfe/semi-ui'
-import { IconCopy, IconSave, IconUndo } from '@douyinfe/semi-icons'
+import { IconCopy, IconSafe, IconSave, IconUndo } from '@douyinfe/semi-icons'
 import styled from 'styled-components'
 import { ITimeRecord } from 'nsrace'
 import { clipboard } from 'electron'
@@ -86,6 +86,9 @@ const IPRecord: React.FC<{ value: ITimeRecord; host: string }> = ({ value, host 
     }
     return `${value.duration.toFixed(0)}ms`
   }, [value])
+  const isDoH = React.useMemo(() => {
+    return value.providers.some(({ protocol }) => protocol === 'DoH')
+  }, [value])
   const handleCopy = React.useCallback(() => {
     clipboard.writeText(`${value.ip} ${host}`)
     Toast.success('已复制 Hosts 规则')
@@ -105,6 +108,7 @@ const IPRecord: React.FC<{ value: ITimeRecord; host: string }> = ({ value, host 
       <div className="information">
         <span className="ip">{value.ip}</span>
         <Tag color={value.duration === Infinity ? 'orange' : 'green'}>{duration}</Tag>
+        {isDoH && <Tag color="teal"><IconSafe /> DoH</Tag>}
       </div>
       <ButtonGroup className="operations">
         <Tooltip position="topLeft" content="复制 Hosts 规则">
