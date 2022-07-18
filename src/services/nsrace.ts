@@ -26,9 +26,10 @@ export const submit = async (uris: string[]) => {
   )
   const result: ISubmitResult = []
 
-  for (let task of tasks) {
+  for (const task of tasks) {
     result.push({
       host: task.host,
+      // eslint-disable-next-line no-await-in-loop
       response: await race({
         uri: task.uri,
         pingTimeout: DEFAULT_PING_TIMEOUT,

@@ -13,22 +13,21 @@ export const Result: React.FC<{ value?: ISubmitResult }> = ({ value }) => {
       value?.map(({ host, response }) => ({
         key: host,
         label: <HostRecord host={host} />,
-        children: response?.times?.length && response?.times?.map(time => ({
-          key: `${host}-${time?.ip}`,
-          label: <IPRecord value={time} host={host} />,
-        })) || [{
-          key: `${host}-empty`,
-          label: <Typography.Text disabled>查询失败</Typography.Text>
-        }],
+        children: (response?.times?.length &&
+          response?.times?.map(time => ({
+            key: `${host}-${time?.ip}`,
+            label: <IPRecord value={time} host={host} />,
+          }))) || [
+          {
+            key: `${host}-empty`,
+            label: <Typography.Text disabled>查询失败</Typography.Text>,
+          },
+        ],
       })) || []
     )
   }, [value])
 
-  return (
-    <>
-      <Tree treeData={data} expandAll value={void 0} />
-    </>
-  )
+  return <Tree treeData={data} expandAll value={void 0} />
 }
 
 const RecordStyle = styled.div`
@@ -55,13 +54,16 @@ const HostRecord: React.FC<{ host: string }> = ({ host }) => {
   const handleClear = React.useCallback(() => {
     const [error, count] = removeHost(host)
     if (!error && !count) {
-      return Toast.info('没有该域名相关的 Hosts 记录')
+      Toast.info('没有该域名相关的 Hosts 记录')
+      return
     }
     if (!error) {
-      return Toast.success('已重置该域名的 Hosts 记录')
+      Toast.success('已重置该域名的 Hosts 记录')
+      return
     }
     if (error.message.includes('EACCES')) {
-      return Toast.error('重置失败，请使用管理员权限运行本程序')
+      Toast.error('重置失败，请使用管理员权限运行本程序')
+      return
     }
     Toast.error('更新 Hosts 文件失败')
   }, [host])
@@ -96,10 +98,12 @@ const IPRecord: React.FC<{ value: ITimeRecord; host: string }> = ({ value, host 
   const handleSave = React.useCallback(() => {
     const [error] = updateHost(host, value.ip)
     if (!error) {
-      return Toast.success('已写入 Hosts 文件')
+      Toast.success('已写入 Hosts 文件')
+      return
     }
     if (error.message.includes('EACCES')) {
-      return Toast.error('写入失败，请使用管理员权限运行本程序')
+      Toast.error('写入失败，请使用管理员权限运行本程序')
+      return
     }
     Toast.error('写入 Hosts 文件失败')
   }, [value, host])
@@ -108,7 +112,11 @@ const IPRecord: React.FC<{ value: ITimeRecord; host: string }> = ({ value, host 
       <div className="information">
         <span className="ip">{value.ip}</span>
         <Tag color={value.duration === Infinity ? 'orange' : 'green'}>{duration}</Tag>
-        {isDoH && <Tag color="teal"><IconSafe /> DoH</Tag>}
+        {isDoH && (
+          <Tag color="teal">
+            <IconSafe /> DoH
+          </Tag>
+        )}
       </div>
       <ButtonGroup className="operations">
         <Tooltip position="topLeft" content="复制 Hosts">

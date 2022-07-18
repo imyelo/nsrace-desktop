@@ -46,7 +46,7 @@ const App: React.FC = () => {
   })
   const handleSubmit = React.useCallback(async () => {
     submitter.run(input.split('\n').filter(Boolean))
-  }, [input])
+  }, [input, submitter])
   return (
     <Root>
       <Card
