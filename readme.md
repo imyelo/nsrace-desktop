@@ -1,11 +1,11 @@
-# NSRace App
+# NSRace for Desktop
 > 「换个 DNS 试试？🤔」
 
 ## Overview
 ![screenshot](./docs/assets/screenshot.png)
 
 ## Installation
-https://github.com/imyelo/nsrace-app/releases
+https://github.com/imyelo/nsrace-desktop/releases
 
 ## Builtins DNS Servers List
 Check https://github.com/imyelo/nsrace/blob/master/src/core/config.ts#L7-L31
