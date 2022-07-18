@@ -2,7 +2,7 @@
   "private": true,
   "name": "nsrace-app",
   "productName": "NSRace",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "author": "yelo <zhihuzeye@gmail.com>",
   "license": "MIT",
   "main": "./dist/electron/main/index.js",
