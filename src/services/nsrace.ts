@@ -1,4 +1,4 @@
-import { URL } from 'url'
+import { URL } from 'node:url'
 import { race, IRaceResult } from 'nsrace'
 import _ from 'lodash'
 
