@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Card, TextArea } from '@douyinfe/semi-ui'
+import { Button, Card, TextArea, Toast } from '@douyinfe/semi-ui'
 import styled from 'styled-components'
 import { useRequest } from 'ahooks'
 import { submit } from './services/nsrace'
@@ -45,6 +45,10 @@ const App: React.FC = () => {
     manual: true,
   })
   const handleSubmit = React.useCallback(async () => {
+    if (!input.trim()) {
+      Toast.error('请填入目标地址')
+      return
+    }
     submitter.run(input.split('\n').filter(Boolean))
   }, [input, submitter])
   return (
