@@ -16,7 +16,7 @@
   "dependencies": {
     "electron-store": "^8.0.1",
     "hostile": "^1.3.3",
-    "nsrace": "^1.0.0"
+    "nsrace": "^1.0.1"
   },
   "devDependencies": {
     "@douyinfe/semi-icons": "^2.14.0",

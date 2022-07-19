@@ -4,6 +4,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import esmodule from 'vite-plugin-esmodule'
 import electron from 'vite-plugin-electron'
+import { builtinModules } from 'module'
 import pkg from './package.json'
 
 rmSync(join(__dirname, 'dist'), { recursive: true, force: true }) // v14.14.0
@@ -13,14 +14,12 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': join(__dirname, 'src'),
-      'styles': join(__dirname, 'src/assets/styles'),
+      styles: join(__dirname, 'src/assets/styles'),
     },
   },
   plugins: [
     react(),
-    esmodule([
-      'nsrace'
-    ]),
+    esmodule(['nsrace']),
     electron({
       main: {
         entry: 'electron/main/index.ts',
@@ -41,7 +40,7 @@ export default defineConfig({
             // For debug
             sourcemap: 'inline',
             outDir: 'dist/electron/preload',
-          }
+          },
         },
       },
       // Enables use of Node.js API in the Electron-Renderer
@@ -51,5 +50,10 @@ export default defineConfig({
   server: {
     host: pkg.env.VITE_DEV_SERVER_HOST,
     port: pkg.env.VITE_DEV_SERVER_PORT,
+  },
+  build: {
+    rollupOptions: {
+      external: builtinModules,
+    },
   },
 })
